@@ -1,0 +1,1 @@
+cmd_/home/seed/Desktop/VM_Shared/5.Firewall/Labsetup/Files/kernel_module/modules.order := {   echo /home/seed/Desktop/VM_Shared/5.Firewall/Labsetup/Files/kernel_module/hello.ko; :; } | awk '!x[$$0]++' - > /home/seed/Desktop/VM_Shared/5.Firewall/Labsetup/Files/kernel_module/modules.order

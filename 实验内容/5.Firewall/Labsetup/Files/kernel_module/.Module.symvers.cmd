@@ -1,0 +1,1 @@
+cmd_/home/seed/Desktop/VM_Shared/5.Firewall/Labsetup/Files/kernel_module/Module.symvers := sed 's/ko$$/o/' /home/seed/Desktop/VM_Shared/5.Firewall/Labsetup/Files/kernel_module/modules.order | scripts/mod/modpost -m -a   -o /home/seed/Desktop/VM_Shared/5.Firewall/Labsetup/Files/kernel_module/Module.symvers -e -i Module.symvers   -T -
