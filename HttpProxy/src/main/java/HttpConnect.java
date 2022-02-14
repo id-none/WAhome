@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * 新连接处理线程
  */
 
-public class HttpConnectThread extends Thread {
+public class HttpConnect extends Thread {
 
     private final Socket client;
     private final long createTime = System.currentTimeMillis();
@@ -26,7 +26,7 @@ public class HttpConnectThread extends Thread {
     private DataOutputStream serverOutputStream = null;  //服务端输出流
     private String clientInputString = null;
 
-    public HttpConnectThread(Socket client) {
+    public HttpConnect(Socket client) {
         this.client = client;
     }
 
@@ -98,10 +98,10 @@ public class HttpConnectThread extends Thread {
         serverOutputStream.flush();
         final CountDownLatch latch;
         if (clientInputString.contains("POST ")) {
-            latch = new CountDownLatch(8);
+            latch = new CountDownLatch(2);
             new HttpExit(clientInputStream, serverOutputStream, latch).start();
         } else {
-            latch = new CountDownLatch(8);
+            latch = new CountDownLatch(2);
         }
         new HttpExit(serverInputStream, clientOutputStream, latch).start();
         latch.await(120, TimeUnit.SECONDS);
@@ -119,7 +119,7 @@ public class HttpConnectThread extends Thread {
         ack = ack + "Proxy-agent: proxy\r\n\r\n";
         clientOutputStream.write(ack.getBytes());
         clientOutputStream.flush();
-        final CountDownLatch latch = new CountDownLatch(8);
+        final CountDownLatch latch = new CountDownLatch(2);
         new HttpExit(serverInputStream, clientOutputStream, latch).start();
         new HttpExit(clientInputStream, serverOutputStream, latch).start();
         latch.await(120, TimeUnit.SECONDS);

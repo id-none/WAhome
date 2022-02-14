@@ -26,7 +26,7 @@ public class HttpProxy extends Thread {
                 Socket client = server.accept();
                 System.out.println(client);
                 //使用线程处理收到的请求
-                new HttpConnectThread(client).start();
+                new HttpConnect(client).start();
             } catch (Exception e) {
                 e.printStackTrace();
             }
