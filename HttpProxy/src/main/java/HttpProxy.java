@@ -13,9 +13,10 @@ public class HttpProxy extends Thread {
 
     public static void main(String[] args) throws IOException {
         int port = 11111;
-//        if (args != null && args.length > 0 && args[0].matches("\\d+")) {
-//            port = Integer.parseInt(args[0]);
-//        }
+/*        if (args != null && args.length > 0 && args[0].matches("\\d+")) {
+            port = Integer.parseInt(args[0]);
+        }
+ */
         new HttpProxy(port).start();
     }
 

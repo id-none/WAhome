@@ -81,6 +81,7 @@ public class HttpConnect extends Thread {
         Matcher matcher = pattern.matcher(clientInputString + "/");
         if (matcher.find()) {
             host = matcher.group(1);
+            // 判断端口号
             if (host.contains(":")) {
                 port = Integer.parseInt(host.substring(host.indexOf(":") + 1));
                 host = host.substring(0, host.indexOf(":"));
