@@ -2,6 +2,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -25,6 +26,7 @@ public class HttpConnect extends Thread {
     private DataOutputStream clientOutputStream = null; //客户端输出流
     private DataOutputStream serverOutputStream = null;  //服务端输出流
     private String clientInputString = null;
+    static private ArrayList<String> hosts = new ArrayList<>();
 
     public HttpConnect(Socket client) {
         this.client = client;
@@ -33,6 +35,8 @@ public class HttpConnect extends Thread {
     @Override
     public void run() {
         try {
+            //hosts.add("127.0.0.1");
+            hosts.add("baidu.com");
             clientInputStream = new DataInputStream(client.getInputStream());
             clientOutputStream = new DataOutputStream(client.getOutputStream());
             if (clientInputStream != null) {
@@ -49,7 +53,9 @@ public class HttpConnect extends Thread {
                         // 从所读数据中取域名和端口号
                         parseServerHost("http://([^/]+)/");
                     }
-                    if (host != null) {
+                    if (host != null && !hosts.contains(host)) {
+                        //System.out.println(hosts.contains("baidu.com"));
+                        System.out.println(host);
                         server = new Socket(host, port);
                         // 根据读到的域名和端口号建立套接字
                         serverInputStream = new DataInputStream(server.getInputStream());
