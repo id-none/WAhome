@@ -26,7 +26,7 @@ public class HttpConnect extends Thread {
     private DataOutputStream clientOutputStream = null; //客户端输出流
     private DataOutputStream serverOutputStream = null;  //服务端输出流
     private String clientInputString = null;
-    static private ArrayList<String> hosts = new ArrayList<>();
+    static private final ArrayList<String> hosts = new ArrayList<>();
 
     public HttpConnect(Socket client) {
         this.client = client;
@@ -36,6 +36,7 @@ public class HttpConnect extends Thread {
     public void run() {
         try {
             //hosts.add("127.0.0.1");
+            //hosts = HttpProxy.list;
             hosts.add("baidu.com");
             clientInputStream = new DataInputStream(client.getInputStream());
             clientOutputStream = new DataOutputStream(client.getOutputStream());
@@ -53,7 +54,7 @@ public class HttpConnect extends Thread {
                         // 从所读数据中取域名和端口号
                         parseServerHost("http://([^/]+)/");
                     }
-                    if (host != null && !hosts.contains(host)) {
+                    if (host != null && IsOk(host)) {
                         //System.out.println(hosts.contains("baidu.com"));
                         System.out.println(host);
                         server = new Socket(host, port);
@@ -83,6 +84,7 @@ public class HttpConnect extends Thread {
      * @param regExp
      */
     private void parseServerHost(String regExp) {
+        System.out.println("解析端口号");
         Pattern pattern = Pattern.compile(regExp);
         Matcher matcher = pattern.matcher(clientInputString + "/");
         if (matcher.find()) {
@@ -105,9 +107,11 @@ public class HttpConnect extends Thread {
         serverOutputStream.flush();
         final CountDownLatch latch;
         if (clientInputString.contains("POST ")) {
+            System.out.println("doPost");
             latch = new CountDownLatch(2);
             new HttpExit(clientInputStream, serverOutputStream, latch).start();
         } else {
+            System.out.println("doGet");
             latch = new CountDownLatch(2);
         }
         new HttpExit(serverInputStream, clientOutputStream, latch).start();
@@ -122,6 +126,7 @@ public class HttpConnect extends Thread {
      * @return
      */
     private void doConnect() throws IOException, InterruptedException {
+        System.out.println("doConnect");
         String ack = "HTTP/1.0 200 Connection established\r\n";
         ack = ack + "Proxy-agent: proxy\r\n\r\n";
         clientOutputStream.write(ack.getBytes());
@@ -133,5 +138,13 @@ public class HttpConnect extends Thread {
         IOUtils.close(serverInputStream, serverOutputStream, server, clientInputStream, clientOutputStream, client);
     }
 
+    private boolean IsOk(String h) {
+        for (String i : hosts) {
+            if (h.contains(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
 
